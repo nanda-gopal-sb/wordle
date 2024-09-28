@@ -135,7 +135,7 @@ int main()
             break;
         }
         if (numberOfTries > 0)
-            system("cls");
+            system("clear");
         for (int i = 0; i < numberOfTries; i++)
         {
             game->display(guessArr[i], currentWord);
