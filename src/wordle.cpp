@@ -1,19 +1,20 @@
 #include <iostream>
-#include <cstdlib>
 #include <fstream>
-#include <string.h>
 #include <random>
-#include <chrono>
+#include <chrono> //to implement a pause
 #include <thread>
 
-#define red 91
-#define green 92
-#define yellow 93
+#define red 91    // to print red on the terminal
+#define green 92  // same
+#define yellow 93 // same
 
-using std::cout, std::cin, std::string, std::uniform_int_distribution;
+using std::cout, std::cin, std::string; // I dont wanna type out std:: all the time
+
+// the number generator, public cuz I need it at two places
 std::random_device rd;
 std::mt19937 gen(rd());
-class gameFunctions
+
+class gameFunctions // the singular class in this file
 {
 public:
     void printColoredChar(char ch, int color);
@@ -22,10 +23,11 @@ public:
     int random();
     bool isPresentInsideString(string word, char toCheck);
     void display(string word, string currentWord);
-    bool isAvalidWord(string toCheck);
+    bool isWordInFile(string toCheck);
 };
-bool gameFunctions::isAvalidWord(string toCheck)
+bool gameFunctions::isWordInFile(string toCheck) // does exactly what it says
 {
+    // basically checks if toCheck is inside the file, if yes true
     std::ifstream file("fiveLetterWords.dat");
     string line;
     int lineLength = 0;
@@ -44,33 +46,40 @@ bool gameFunctions::isAvalidWord(string toCheck)
 }
 int gameFunctions::random()
 {
+    // generates a random number between 1 and 5746(5746 being the number of words in the file)
     std::uniform_int_distribution<> dist(1, 5746);
     return dist(gen);
 }
 void gameFunctions::display(string guess, string currentWord)
 {
+    // handles the coloruing of the letters
     for (int i = 0; i < 5; i++)
     {
         if (guess[i] == currentWord[i])
         {
+            // if the letter is in the right place
             printColoredChar(guess[i], green);
             continue;
         }
         if (isPresentInsideString(currentWord, guess[i]))
         {
+            /// if the letter is in the word but not in the right place
             printColoredChar(guess[i], yellow);
             continue;
         }
+        // if the letter is not in the word
         printColoredChar(guess[i], red);
     }
     cout << "\n";
 }
 void gameFunctions::printColoredChar(char ch, int color)
 {
+    // this is a terminal specific function, it prints the character in the specified color
     cout << "\033[1;" << color << "m" << ch << "\033[0m";
 }
 bool gameFunctions::isPresentInsideString(string word, char toCheck)
 {
+    // obvious
     for (int i = 0; i < 5; i++)
     {
         if (word[i] == toCheck)
@@ -82,6 +91,7 @@ bool gameFunctions::isPresentInsideString(string word, char toCheck)
 }
 void gameFunctions::welcomeMessage()
 {
+    // the welcome message(duh)
     cout << "Welcome to Wordle! C++ Style" << "\n";
     cout << "Guess the Word in 6 tries." << "\n";
     cout << "Each guess must be a valid 5-letter word." << "\n";
@@ -100,6 +110,7 @@ void gameFunctions::welcomeMessage()
 }
 string gameFunctions::getWordForToday()
 {
+    // gets a random word from the file
     std::ifstream file("fiveLetterWords.dat");
     string word;
     int count = 0;
@@ -152,7 +163,7 @@ int main()
             std::this_thread::sleep_for(std::chrono::seconds(3));
             continue;
         }
-        if (!game->isAvalidWord(guess))
+        if (!game->isWordInFile(guess))
         {
             cout << "Not in the word list try again :(" << "\n";
             std::this_thread::sleep_for(std::chrono::seconds(3));
