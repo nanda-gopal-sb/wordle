@@ -34,7 +34,7 @@ To compile and run the Wordle game, follow these steps:
 
 2. Compile the code:
     ```sh
-    g++ -o wordle main.cpp
+    g++ -o wordle wordle.cpp
     ```
 
 3. Run the game:
