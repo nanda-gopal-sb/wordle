@@ -130,15 +130,19 @@ int main()
 {
     gameFunctions *game = new gameFunctions();
     string guessArr[6];
+
     game->welcomeMessage();
     string currentWord = game->getWordForToday();
+
     int numberOfTries = 0;
     string guess;
     int commonIndex = 0;
+
     while (numberOfTries < 7)
     {
         if (numberOfTries == 6)
         {
+            // checking for this as I dont want to clear the screen after the last try
             system("clear");
             for (int i = 0; i < 6; i++)
             {
@@ -149,7 +153,9 @@ int main()
             break;
         }
         if (numberOfTries > 0)
+        {
             system("clear");
+        }
         for (int i = 0; i < numberOfTries; i++)
         {
             game->display(guessArr[i], currentWord);
@@ -160,13 +166,13 @@ int main()
         if (guess.length() != 5)
         {
             cout << "The entered word must be of 5 letters" << "\n";
-            std::this_thread::sleep_for(std::chrono::seconds(3));
+            std::this_thread::sleep_for(std::chrono::seconds(3)); // wating for 3 seconds
             continue;
         }
         if (!game->isWordInFile(guess))
         {
             cout << "Not in the word list try again :(" << "\n";
-            std::this_thread::sleep_for(std::chrono::seconds(3));
+            std::this_thread::sleep_for(std::chrono::seconds(3)); // same
             continue;
         }
         else
