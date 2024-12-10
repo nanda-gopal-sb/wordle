@@ -3,12 +3,16 @@
 #include <fstream>
 #include <string.h>
 #include <random>
+#include <chrono>
+#include <thread>
+
 #define red 91
 #define green 92
 #define yellow 93
-using namespace std;
-random_device rd;
-mt19937 gen(rd());
+
+using std::cout, std::cin, std::string, std::uniform_int_distribution;
+std::random_device rd;
+std::mt19937 gen(rd());
 class gameFunctions
 {
 public:
@@ -22,7 +26,7 @@ public:
 };
 bool gameFunctions::isAvalidWord(string toCheck)
 {
-    ifstream file("fiveLetterWords.dat");
+    std::ifstream file("fiveLetterWords.dat");
     string line;
     int lineLength = 0;
     int targetLength = toCheck.length();
@@ -40,7 +44,7 @@ bool gameFunctions::isAvalidWord(string toCheck)
 }
 int gameFunctions::random()
 {
-    uniform_int_distribution<> dist(1, 5746);
+    std::uniform_int_distribution<> dist(1, 5746);
     return dist(gen);
 }
 void gameFunctions::display(string guess, string currentWord)
@@ -96,7 +100,7 @@ void gameFunctions::welcomeMessage()
 }
 string gameFunctions::getWordForToday()
 {
-    ifstream file("fiveLetterWords.dat");
+    std::ifstream file("fiveLetterWords.dat");
     string word;
     int count = 0;
     int rand = random();
@@ -124,6 +128,7 @@ int main()
     {
         if (numberOfTries == 6)
         {
+            system("clear");
             for (int i = 0; i < 6; i++)
             {
                 game->display(guessArr[i], currentWord);
@@ -133,7 +138,7 @@ int main()
             break;
         }
         if (numberOfTries > 0)
-            system("cls");
+            system("clear");
         for (int i = 0; i < numberOfTries; i++)
         {
             game->display(guessArr[i], currentWord);
@@ -144,13 +149,13 @@ int main()
         if (guess.length() != 5)
         {
             cout << "The entered word must be of 5 letters" << "\n";
-            this_thread::sleep_for(chrono::seconds(3));
+            std::this_thread::sleep_for(std::chrono::seconds(3));
             continue;
         }
         if (!game->isAvalidWord(guess))
         {
             cout << "Not in the word list try again :(" << "\n";
-            this_thread::sleep_for(chrono::seconds(3));
+            std::this_thread::sleep_for(std::chrono::seconds(3));
             continue;
         }
         else
